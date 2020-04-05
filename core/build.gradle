@@ -1,5 +1,5 @@
 apply plugin: "java"
-apply plugin: 'jacoco'
+apply plugin: "jacoco"
 
 sourceCompatibility = 1.7
 dependencies {
@@ -11,19 +11,23 @@ sourceSets.main.java.srcDirs = [ "src/main/java", "src/test/java" ]
 
 eclipse.project.name = appName + "-core"
 
-jacocoTestReport {
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
-
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "${buildDir}/classes/java", excludes: fileFilter)
-    def mainSrc = "${project.projectDir}/src/main/java"
-
-    sourceDirectories.setFrom files([mainSrc])
-    classDirectories.setFrom files([debugTree])
-    executionData.setFrom files("${buildDir}/jacoco/testDebugUnitTest.exec")
+jacoco {
+    toolVersion = "0.7.1.201405082137"
 }
 
+repositories {
+    mavenCentral()
+}
+
+test {
+    jacoco {
+        append = false
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled false
+    }
+}
