@@ -1,2 +1,2 @@
-rootProject.name='Risk'
+rootProject.name='CI_Test'
 include ':app'
