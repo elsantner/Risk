@@ -41,7 +41,7 @@ script:
 ## uncomment test exec if android integration tests are needed
 #  - ./gradlew connectedAndroidTest
   - ./gradlew lint
-  - sonar-scanner
+  - sonar-scanner -Dsonar.host.url=http://sonarcloud.io -Dsonar.projectKey=Risk -Dsonar.login=d1a8bac7764399a03158d2810a5074f36775203e
 
 addons:
   sonarcloud:
