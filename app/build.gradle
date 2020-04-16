@@ -1,17 +1,18 @@
+apply plugin: 'jacoco'
+
 android {
     buildToolsVersion "29.0.2"
     compileSdkVersion 29
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src']
-            aidl.srcDirs = ['src']
-            renderscript.srcDirs = ['src']
-            res.srcDirs = ['res']
-            assets.srcDirs = ['assets']
+            java.srcDirs = ['src/main/java', 'src/test/java/']
+            aidl.srcDirs = ['src/main/java', 'src/test/java/']
+            renderscript.srcDirs = ['src/main/java', 'src/test/java/']
+            res.srcDirs = ['src/main/res']
+            assets.srcDirs = ['src/main/assets']
             jniLibs.srcDirs = ['libs']
         }
-
     }
     packagingOptions {
         exclude 'META-INF/robovm/ios/robovm.xml'
@@ -29,6 +30,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+dependencies {
+    implementation 'junit:junit:4.12'
 }
 
 
@@ -90,3 +95,18 @@ task run(type: Exec) {
 }
 
 eclipse.project.name = appName + "-android"
+
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom files([mainSrc])
+    classDirectories.setFrom files([debugTree])
+    executionData.setFrom files("${buildDir}/jacoco/testDebugUnitTest.exec")
+}
